@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "UI"
+			"path": "dashboard"
+		},
+		{
+		"name": "Agent客户端"
+			"path": "agent"
+		},
+		{
+		"name": "服务器"
+			"path": "server"
+		},
+		{
+		"name": "文档"
+			"path": "doc"
+		}
+	],
+	"settings": {
+	    "go.toolsEnvVars": {
+      "GOPROXY": "https://goproxy.cn,direct",
+      "GONOPROXY": "none;"
+		}
+	}
+}

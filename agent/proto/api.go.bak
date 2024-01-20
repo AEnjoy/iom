@@ -1,0 +1,19 @@
+package proto
+
+import "context"
+
+type IOMProto struct{}
+
+func (t *IOMProto) GetSystemInfo(ctx context.Context, info *Host) (*Flag, error) {
+	var returnFlag Flag
+	returnFlag.Successful = true
+	println("Debug:Receive", info.Platform)
+	return &returnFlag, nil
+}
+
+func (t *IOMProto) GetSystemState(ctx context.Context, req *State) (*Flag, error) {
+	var returnFlag Flag
+	returnFlag.Successful = true
+	println("Debug:Receive", req.Uptime)
+	return &returnFlag, nil
+}

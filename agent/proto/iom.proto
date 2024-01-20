@@ -1,0 +1,86 @@
+syntax = "proto3";
+option go_package = "./proto";
+
+package pb;
+
+service IOMInfoService {
+    rpc GetSystemState(State)returns(Flag);
+    rpc GetSystemInfo(Host)returns(Flag);
+    rpc GetTaskRequest(TaskRequest)returns(Task);
+    rpc GetPackages(Packages)returns(Flag);
+}
+message Flag{
+    bool successful =1;
+    string tips =2;
+}
+
+message Host {
+    string platform = 1;
+    string platform_version = 2;
+    repeated string cpu = 3;
+    uint64 mem_total = 4;
+    uint64 disk_total = 5;
+    uint64 swap_total = 6;
+    string arch = 7;
+    string virtualization = 8;
+    uint64 boot_time = 9;
+    string ip = 10;
+    string country_code = 11;
+    string version = 12;
+    string Token = 13;
+}
+
+message State {
+    double cpu = 1;
+    uint64 mem_used = 3;
+    uint64 swap_used = 4;
+    uint64 disk_used = 5;
+    uint64 net_in_transfer = 6;
+    uint64 net_out_transfer = 7;
+    uint64 net_in_speed = 8;
+    uint64 net_out_speed = 9;
+    uint64 uptime = 10;
+    double load1 = 11;
+    double load5 = 12;
+    double load15 = 13;
+    uint64 tcp_conn_count = 14;
+    uint64 udp_conn_count = 15;
+    uint64 process_count = 16;
+    string Token = 17;
+}
+
+message Task {
+    uint64 id = 1;//0None 1software or 2agent
+    uint64 type = 2;//0host 1docker
+    string data = 3;//args
+    uint32 hasScripts = 4;//0None 1Python 2Shell 3yaml(container)
+    string scriptsUrl=5;
+}
+
+message TaskResult {
+    uint64 id = 1;
+    uint64 type = 2;
+    float delay = 3;
+    string data = 4;
+    bool successful = 5;
+}
+
+message SoftwareInstall{
+    uint64 clientID=1;
+    Task task=2;
+}
+message TaskRequest{
+    string Token=1;
+}
+message Package{
+    string name=1;
+    string version=2;
+    string arch=3;
+    string description=4;
+    string repository=5;
+}
+message Packages{
+    repeated Package packages=1; //[]package
+    string Token=2;
+    int32 Type=3; //PackageType 0deb,1rpm,2apk,3other -1error
+}
