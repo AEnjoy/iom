@@ -7,9 +7,26 @@ import "time"
 var RPCPort = "" //default 10000
 var WebPort = "" //default 8088
 
-// 加密的Tokens
-var TrustedTokens map[string]bool
+type TokenTimeToLife struct {
+	Valid bool
+	Time  time.Time
+}
 
+// 加密的Tokens
+var TrustedTokens map[string]TokenTimeToLife
+
+func TimeToCheckTokenIsValid() {
+	for {
+		for s, v := range TrustedTokens {
+			nowT := time.Now().Unix()
+			dataT := v.Time.Unix()
+			if nowT-dataT > 60*60*24 { //一天
+				delete(TrustedTokens, s)
+			}
+		}
+		time.Sleep(time.Second * 10)
+	}
+}
 func SetDeviceOnline(token string) {
 	v, ok := DevicesInfos[token]
 	if v.Online == false && ok == true {
@@ -38,7 +55,7 @@ func TimeToCheckOnline() {
 
 func MapInit() {
 	DevicesInfos = make(map[string]DevicesInfo)
-	TrustedTokens = make(map[string]bool)
+	TrustedTokens = make(map[string]TokenTimeToLife)
 	PackagesInfo = make(map[string]Packages)
 }
 

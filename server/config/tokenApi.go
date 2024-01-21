@@ -4,6 +4,7 @@ import (
 	"IOM/server/global"
 	"IOM/server/utils/hashtool"
 	"errors"
+	"time"
 )
 
 var TrustUsers []IOMSystem
@@ -50,7 +51,7 @@ func tokenInit() {
 		tokenApi.SetUserName(user.Account)
 		t, _ := tokenApi.GetTrustToken()
 		//println("Debug: TrustToken is:", t)
-		global.TrustedTokens[t] = true
+		global.TrustedTokens[t] = global.TokenTimeToLife{Valid: true, Time: time.Now()}
 		tokenApis = append(tokenApis, tokenApi)
 	}
 	for s, _ := range global.DevicesInfos {
@@ -58,7 +59,7 @@ func tokenInit() {
 		tokenApi.SetClientToken(s)
 		t, _ := tokenApi.GetTrustToken()
 		//println("Debug: TrustToken is:", t)
-		global.TrustedTokens[t] = true
+		global.TrustedTokens[t] = global.TokenTimeToLife{Valid: true, Time: time.Now()}
 		tokenApis = append(tokenApis, tokenApi)
 	}
 }

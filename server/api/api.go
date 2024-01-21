@@ -24,6 +24,7 @@ func Exit(code int, msg ...interface{}) {
 func FileReadAll(filename string) string {
 	var str = ""
 	file, _ := os.Open(filename)
+	defer file.Close()
 	reader := bufio.NewReader(file)
 	for {
 		s, err := reader.ReadString('\n')

@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // deviceInfo  http://127.0.0.1:8088/api/devices/:id/info?token=xxx
@@ -65,7 +66,7 @@ func add(context *gin.Context) {
 	var tokenApi config.TokenApi
 	tokenApi.SetClientToken(devicesToken)
 	t, _ := tokenApi.GetTrustToken()
-	global.TrustedTokens[t] = true
+	global.TrustedTokens[t] = global.TokenTimeToLife{Valid: true, Time: time.Now()}
 
 	logrus.Info("WebAPI: add trusted token:", t)
 	context.String(http.StatusOK, "ok")

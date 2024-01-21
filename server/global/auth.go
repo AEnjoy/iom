@@ -10,9 +10,9 @@ func IsValidToken(token string) bool {
 		return false
 	} //空token的map会返回true
 	_, ok1 := DevicesInfos[token]
-	_, ok2 := TrustedTokens[token]
+	temp, ok2 := TrustedTokens[token]
 	//Debug
-	return ok1 || ok2
+	return ok1 || (ok2 && temp.Valid)
 }
 
 func IsCookieAuthValid(c *gin.Context) bool {

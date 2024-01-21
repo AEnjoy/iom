@@ -3,3 +3,4 @@ logs
 main.exe
 main
 venv
+/IOMServerLock.pid

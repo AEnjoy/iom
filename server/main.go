@@ -35,6 +35,7 @@ func Init() {
 	config.DBOpen()
 	go rpc.ServerStart()
 	go global.TimeToCheckOnline()
+	go global.TimeToCheckTokenIsValid()
 }
 
 func main() {
