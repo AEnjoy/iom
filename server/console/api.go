@@ -5,29 +5,8 @@ import (
 	"IOM/server/global"
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"math/rand"
-	"strconv"
-	"strings"
-	"time"
 )
 
-const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-// 生成6位随机验证码（数字）
-func captcha1() (int, error) {
-	return strconv.Atoi(fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000)))
-}
-
-// 生成16位随机ID（字母）
-func capthca2() string {
-	n := 16
-	sb := strings.Builder{}
-	sb.Grow(n)
-	for i := 0; i < n; i++ {
-		sb.WriteByte(charset[rand.Intn(len(charset))])
-	}
-	return sb.String()
-}
 func DashboardShowDevicesStateC(groupID int, devicesID int) {
 	token := config.DeviceIDGetDeviceToken(devicesID)
 	if token != "" {

@@ -58,6 +58,7 @@ func regRouter() {
 	go file.Main()
 	go devices.Main()
 	go api.Main()
+	go otherApis()
 	go main()
 	time.Sleep(time.Second / 2)
 }

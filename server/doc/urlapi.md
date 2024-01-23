@@ -184,3 +184,13 @@ token/cookie不被授权时，将返回401 StatusUnauthorized。错误消息 “
 >  null
 
 成功返回200，IOM Server Version
+
+
+#### /api/creat-token 创建随机token
+
+> 参数
+>
+> null
+
+成功返回200，16位数字字母混合 token
+

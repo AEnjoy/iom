@@ -1,6 +1,7 @@
 package console
 
 import (
+	"IOM/server/api"
 	"IOM/server/config"
 	"fmt"
 	"github.com/sirupsen/logrus"
@@ -44,8 +45,8 @@ func DevicesAdd(Command []string) {
 	}
 
 	var devicesID int
-	devicesID, _ = captcha1()
-	token := capthca2()
+	devicesID, _ = api.Captcha1()
+	token := api.Capthca2()
 	flag := 0
 
 	//devicename = strings.Replace(devicename, "\n", "", -1)
@@ -88,7 +89,7 @@ func GroupAddC() {
 		fmt.Println("设备组名已存在")
 		return
 	}
-	gid, _ := captcha1()
+	gid, _ := api.Captcha1()
 	//config.Db.Exec("insert into GroupsA(ID,GroupName) values (?,?)", strconv.Itoa(gid), text)
 	config.GroupAdd(gid, text)
 }

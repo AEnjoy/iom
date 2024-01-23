@@ -3,13 +3,20 @@ package api
 import (
 	"IOM/server/config"
 	"bufio"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"io"
+	"math/rand"
 	"os"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var lock *os.File
 var lockFile = "./IOMServerLock.pid"
+
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 func Exit(code int, msg ...interface{}) {
 	if code != 0 {
@@ -46,4 +53,20 @@ func ExitHandle(exitChan chan os.Signal) {
 		}
 	}
 
+}
+
+// 生成6位随机验证码（数字）
+func Captcha1() (int, error) {
+	return strconv.Atoi(fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000)))
+}
+
+// 生成16位随机ID（字母）
+func Capthca2() string {
+	n := 16
+	sb := strings.Builder{}
+	sb.Grow(n)
+	for i := 0; i < n; i++ {
+		sb.WriteByte(charset[rand.Intn(len(charset))])
+	}
+	return sb.String()
 }
