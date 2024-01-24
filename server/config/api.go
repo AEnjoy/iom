@@ -73,7 +73,9 @@ func DeviceIDGetDeviceToken(id int) string {
 	}
 	return returns
 }
-
+func IsDeviceIDValid(id int) bool {
+	return DeviceIDGetDeviceToken(id) != ""
+}
 func DeviceDelete(deviceId int, groupID int) error {
 	_, err := Db.Exec("delete from Devices where DevicesID = ?", deviceId)
 	if err != nil {

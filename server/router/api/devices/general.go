@@ -1,6 +1,7 @@
 package devices
 
 import (
+	"IOM/server/api"
 	"IOM/server/config"
 	"IOM/server/global"
 	"github.com/gin-gonic/gin"
@@ -56,7 +57,15 @@ func add(context *gin.Context) {
 	deviceName := context.PostForm("deviceName")
 	deviceFlag, _ := strconv.Atoi(context.PostForm("deviceFlag"))
 	groupId, _ := strconv.Atoi(context.PostForm("groupId"))
-
+	if deviceId == 0 {
+		var t int
+		for {
+			t, _ = api.Captcha1()
+			if !config.IsDeviceIDValid(t) {
+				break
+			}
+		}
+	}
 	logrus.Info("WebAPi: add deviceId:", deviceId, " ,devicesWeight:", devicesWeight, " ,devicesToken:", devicesToken, " ,deviceName", deviceName, " ,deviceFlag:", deviceFlag, " ,groupId:", groupId)
 	err := config.DeviceAdd(deviceId, devicesWeight, devicesToken, deviceName, deviceFlag, groupId)
 	if err != nil {

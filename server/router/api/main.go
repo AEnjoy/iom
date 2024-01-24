@@ -8,6 +8,8 @@ func Main() {
 	global.Router.POST("/api/group/add", groupAdd)
 	global.Router.DELETE("/api/group/delete", groupDelete)
 	global.Router.GET("/api/captcha", createCode) //pic
+	global.Router.GET("/api/group/search/name-get-id", groupNameGetGroupIDGetMethod)
 	global.Router.POST("/api/captcha/verify", verify)
 	global.Router.POST("/api/user-password-change", passwordChange)
+	global.Router.POST("/api/group/search/name-get-id", groupNameGetGroupIDPostMethod)
 }

@@ -32,6 +32,37 @@ token/cookie不被授权时，将返回401 StatusUnauthorized。错误消息 “
 
 如果返回500，StatusInternalServerError 请检查后端数据库是否出现异常
 
+#### /api/group/search/name-get-id 通过组名获取组ID
+
+
+> 参数
+>{
+> 
+>    "name": String
+> 
+> }
+> 
+> name：String 设备组的名字 
+
+成功找到返回200，
+
+{
+
+"id":int,
+
+"Status":"OK"
+
+}
+
+失败返回404
+{
+
+"id":0,
+
+"Status":"Not Found"
+
+}
+
 ### Delete请求
 
 #### /api/group/delete

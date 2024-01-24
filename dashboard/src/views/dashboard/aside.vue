@@ -1,7 +1,7 @@
 <template>
   <el-radio-group v-model="isCollapse" style="margin-bottom: 10px">
     <el-radio-button :label="false">&gt;&gt</el-radio-button>
-    <el-radio-button :label="true">&lt;&lt;</el-radio-button>
+    <el-radio-button :label="true">&lt;&lt</el-radio-button>
   </el-radio-group>
   <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen"
     @close="handleClose">

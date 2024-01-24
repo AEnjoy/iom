@@ -2,8 +2,8 @@
 import Footer from '../../components/footer.vue'
 import HeaderBase from '../../components/layouts/BaseHeader.vue'
 import side from './aside.vue'
-import LodeDevice from './devices.vue'
-import FuncDevice from './deviceFunction.vue'
+import devicesTable from './devicesTable.vue'
+import t from  './device/device-add.vue'
 </script>
 
 <template>
@@ -15,8 +15,9 @@ import FuncDevice from './deviceFunction.vue'
           <el-container>
             <el-main>
               <!--Main-->
-              <div class="left"><LodeDevice device="snlspjrnzxcevyfk"/></div>
-              <div class="right"><FuncDevice device="snlspjrnzxcevyfk"/></div>
+              <!--div class="left"><LodeDevice device="snlspjrnzxcevyfk"/></div-->
+              <!--div class="right"><FuncDevice device="snlspjrnzxcevyfk"/></div-->
+              <t/>
             </el-main>
             <el-footer>
                 <Footer/>

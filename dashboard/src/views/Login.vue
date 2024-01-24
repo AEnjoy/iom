@@ -1,5 +1,6 @@
 <script setup>
 import { ElNotification } from 'element-plus'
+import {Lock, User} from "@element-plus/icons-vue";
 const forgetPassword = () => {
   ElNotification({
     title: '注意',
@@ -74,7 +75,7 @@ export default {
   },
   beforeMount() {
     axios.get('/api/auth/signin').then(response => {
-      if (response.status == 200) {
+      if (response.status === 200) {
         this.goRouter({ name: 'home' });
       }
     }, error => {

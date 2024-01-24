@@ -4,6 +4,7 @@
 -->
 <script setup>
 import { ref } from 'vue'
+import FuncDevice from './deviceFunction.vue'
 //?token=snlspjrnzxcevyfk
 const props = defineProps({
   device: "String"
@@ -20,82 +21,89 @@ const customColorMethod = (percentage) => {
 </script>
 
 <template>
-  <div :id="device" class="ui card">
-    <div class="content" style="margin-top: 10px; padding-bottom: 5px;">
-      <div class="header">
-        <img :src="CountryPicUrl" alt="国家"
-          style="border-radius: 50%; box-shadow: rgb(238, 238, 238) -1px -1px 2px, rgb(0, 0, 0) 1px 1px 2px; width: 19px;">
-        &nbsp;<i
-          :class="classOs"></i>
-        {{ PlatformVersion }}
-        <i class="info circle icon" style="height: 28px;"></i>
-        <div class="ui content popup" style="margin-bottom: 0px;">
-          系统: {{Platform}}
-          <br>
-          CPU: [
-          {{ CPU }}
-          ]{{ Virtualization }}<br>
-          硬盘:
-          {{ DiskUsed }}GB/{{ DiskTotal}}GB<br>
-          内存:
-          {{ MemUsed}}GB/{{ MemTotal}}GB<br>
-          交换:
-          {{ SwapUsed}}GB/{{ SwapTotal}}GB<br>
-          流量: <i class="arrow alternate circle down outline icon"></i><br>{{ NetInTransfer}} KB / <i
-            class="arrow alternate circle up outline icon"></i>{{ NetOutTransfer}} KB<br>
-          负载: {{ [Load1, Load5, Load15] }}<br>
-          进程数: {{ ProcessCount }}<br>
-          连接数: TCP {{ TcpConnCount }} / UDP {{ UdpConnCount }}<br>
-          启动: {{ BootTime }}<br>
-          活动: {{ DataTime }}<br>
-          版本: {{ Version }}<br>
+  <el-container>
+    <el-aside width="300px">
+      <div :id="device" class="ui card">
+        <div class="content" style="margin-top: 10px; padding-bottom: 5px;">
+          <div class="header">
+            <img :src="CountryPicUrl" alt="国家"
+                 style="border-radius: 50%; box-shadow: rgb(238, 238, 238) -1px -1px 2px, rgb(0, 0, 0) 1px 1px 2px; width: 19px;">
+            &nbsp;<i
+              :class="classOs"></i>
+            {{ PlatformVersion }}
+            <i class="info circle icon" style="height: 28px;"></i>
+            <div class="ui content popup" style="margin-bottom: 0px;">
+              系统: {{Platform}}
+              <br>
+              CPU: [
+              {{ CPU }}
+              ]{{ Virtualization }}<br>
+              硬盘:
+              {{ DiskUsed }}GB/{{ DiskTotal}}GB<br>
+              内存:
+              {{ MemUsed}}GB/{{ MemTotal}}GB<br>
+              交换:
+              {{ SwapUsed}}GB/{{ SwapTotal}}GB<br>
+              流量: <i class="arrow alternate circle down outline icon"></i><br>{{ NetInTransfer}} KB / <i
+                class="arrow alternate circle up outline icon"></i>{{ NetOutTransfer}} KB<br>
+              负载: {{ [Load1, Load5, Load15] }}<br>
+              进程数: {{ ProcessCount }}<br>
+              连接数: TCP {{ TcpConnCount }} / UDP {{ UdpConnCount }}<br>
+              启动: {{ BootTime }}<br>
+              活动: {{ DataTime }}<br>
+              版本: {{ Version }}<br>
+            </div>
+            <div class="ui divider" style="margin-bottom: 5px;"></div>
+          </div>
+          <div class="description">
+            <div class="ui grid">
+              <div class="three wide column">CPU</div>
+              <div class="thirteen wide column">
+                <el-progress :color="customColorMethod" :percentage="CPUUsed" />
+              </div>
+              <div class="three wide column">内存</div>
+              <div class="thirteen wide column">
+                <el-progress :color="customColorMethod" :percentage="MemUsedPercent" />
+              </div>
+              <div class="three wide column">交换</div>
+              <div class="thirteen wide column">
+                <el-progress :color="customColorMethod" :percentage="SwapUsedPercent" />
+              </div>
+              <div class="three wide column">网络</div>
+              <div class="thirteen wide column"><i class="arrow alternate circle down outline icon"></i>
+                {{ NetOutSpeed}}
+                <i class="arrow alternate circle up outline icon"></i>
+                {{ NetInSpeed}}
+              </div>
+              <div class="three wide column">流量</div>
+              <div class="thirteen wide column"><i class="arrow circle down icon"></i>
+                {{ NetInTransfer }}
+                &nbsp;
+                <i class="arrow circle up icon"></i>
+                {{ NetOutTransfer }}
+              </div>
+              <div class="three wide column">硬盘</div>
+              <div class="thirteen wide column">
+                <el-progress :color="customColorMethod" :percentage="DiskUsedPercent" />
+              </div>
+              <div class="three wide column">信息</div>
+              <div class="thirteen wide column">
+                <i class="bi bi-memory" style="font-size: 1.1rem; color: rgb(0, 172, 13);"></i> {{ DiskUsed }} GB
+                &nbsp;
+                <i class="bi bi-hdd-rack-fill" style="font-size: 1.1rem; color: rgb(152, 0, 0);"></i>/ {{ DiskTotal }} GB
+              </div>
+              <div class="three wide column">{{ Online ? '在线' : '离线' }}</div>
+              <div class="thirteen wide column"><i class="clock icon"></i>{{ DataTime }}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="ui divider" style="margin-bottom: 5px;"></div>
       </div>
-      <div class="description">
-        <div class="ui grid">
-          <div class="three wide column">CPU</div>
-          <div class="thirteen wide column">
-            <el-progress :color="customColorMethod" :percentage="CPUUsed" />
-          </div>
-          <div class="three wide column">内存</div>
-          <div class="thirteen wide column">
-            <el-progress :color="customColorMethod" :percentage="MemUsedPercent" />
-          </div>
-          <div class="three wide column">交换</div>
-          <div class="thirteen wide column">
-            <el-progress :color="customColorMethod" :percentage="SwapUsedPercent" />
-          </div>
-          <div class="three wide column">网络</div>
-          <div class="thirteen wide column"><i class="arrow alternate circle down outline icon"></i>
-            {{ NetOutSpeed}}
-            <i class="arrow alternate circle up outline icon"></i>
-            {{ NetInSpeed}}
-          </div>
-          <div class="three wide column">流量</div>
-          <div class="thirteen wide column"><i class="arrow circle down icon"></i>
-            {{ NetInTransfer }}
-            &nbsp;
-            <i class="arrow circle up icon"></i>
-            {{ NetOutTransfer }}
-          </div>
-          <div class="three wide column">硬盘</div>
-          <div class="thirteen wide column">
-            <el-progress :color="customColorMethod" :percentage="DiskUsedPercent" />
-          </div>
-          <div class="three wide column">信息</div>
-          <div class="thirteen wide column">
-            <i class="bi bi-memory" style="font-size: 1.1rem; color: rgb(0, 172, 13);"></i> {{ DiskUsed }} GB
-            &nbsp;
-            <i class="bi bi-hdd-rack-fill" style="font-size: 1.1rem; color: rgb(152, 0, 0);"></i>/ {{ DiskTotal }} GB
-          </div>
-          <div class="three wide column">{{ Online ? '在线' : '离线' }}</div>
-          <div class="thirteen wide column"><i class="clock icon"></i>{{ DataTime }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    </el-aside>
+    <el-main>
+      <FuncDevice device="snlspjrnzxcevyfk"/>
+    </el-main>
+    </el-container>
 </template>
 <script>
 import {ref} from "vue";

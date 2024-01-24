@@ -2,8 +2,11 @@ package config
 
 import (
 	"IOM/server/global"
+	"database/sql"
 	"time"
 )
+
+var Db *sql.DB
 
 type IOMSystem struct {
 	Account  string //Admin
