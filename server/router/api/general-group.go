@@ -5,6 +5,7 @@ GroupAPIs
 */
 
 import (
+	"IOM/server/api"
 	"IOM/server/config"
 	"IOM/server/global"
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ import (
 )
 
 // groupAdd
-// Get
+// Post
 //
 //	http://127.0.0.1:8088/api/group/add?token=xxx&id=xxx&name=xxx
 func groupAdd(context *gin.Context) {
@@ -25,22 +26,31 @@ func groupAdd(context *gin.Context) {
 		logrus.Errorln("WebAPI: Request ", context.Request.URL.Path, " token is invalid.")
 		return
 	}
-
-	id, e := strconv.Atoi(context.PostForm("id"))
+	gid, e := strconv.Atoi(context.PostForm("id"))
+	if gid == 0 {
+		var t int
+		for {
+			t, _ = api.Captcha1()
+			if !config.IsGroupIDValid(t) {
+				break
+			}
+		}
+		gid = t
+	}
 	if e != nil {
 		context.String(http.StatusBadRequest, "id is invalid")
 		logrus.Errorln("WebAPI: Request ", context.Request.URL.Path, " id is invalid.")
 		return
 	}
 	name := context.PostForm("name")
-	err := config.GroupAdd(id, name)
+	err := config.GroupAdd(gid, name)
 	if err != nil {
 		context.String(http.StatusInternalServerError, "group add failed")
 		logrus.Errorln("WebAPI: Request ", context.Request.URL.Path, " group add failed.")
 		return
 	}
 	context.String(http.StatusOK, "ok")
-	logrus.Infoln("WebAPI: group add id:", id, ", name:", name, " successful.")
+	logrus.Infoln("WebAPI: group add id:", gid, ", name:", name, " successful.")
 }
 
 //		groupDelete
@@ -109,4 +119,31 @@ func groupNameGetGroupIDPostMethod(context *gin.Context) {
 	}
 	context.JSON(http.StatusOK, gin.H{"ID": gId, "Status": "OK"})
 	logrus.Infoln("WebAPI: Request ", context.Request.URL.Path, " done, group id:", gId)
+}
+
+//	     groupIDGetGroupName Get/Post
+//			http://localhost:8088/api/group/id/is-valid?id=xxx
+func isGroupIDValidGetMethod(context *gin.Context) {
+	logrus.Info("WebAPI: Request isGroupIDValidGetMethod:", context.Request.URL.Path)
+	token := context.DefaultQuery("token", "")
+	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
+		context.String(http.StatusUnauthorized, "token is invalid")
+		logrus.Errorln("WebAPI: Request Delete:", context.Request.URL.Path, " token is invalid.")
+		return
+	}
+	gId, _ := strconv.Atoi(context.DefaultQuery("id", "-1"))
+	context.String(http.StatusOK, strconv.FormatBool(config.IsGroupIDValid(gId)))
+	logrus.Infoln("WebAPI: Request isGroupIDValidPostMethod:", context.Request.URL.Path, " done. Value is ", strconv.FormatBool(config.IsGroupIDValid(gId)))
+}
+func isGroupIDValidPostMethod(context *gin.Context) {
+	logrus.Info("WebAPI: Request isGroupIDValidGetMethod:", context.Request.URL.Path)
+	token := context.DefaultQuery("token", "")
+	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
+		context.String(http.StatusUnauthorized, "token is invalid")
+		logrus.Errorln("WebAPI: Request Delete:", context.Request.URL.Path, " token is invalid.")
+		return
+	}
+	gId, _ := strconv.Atoi(context.PostForm("id"))
+	context.JSON(http.StatusOK, gin.H{"Status": strconv.FormatBool(config.IsGroupIDValid(gId))})
+	logrus.Infoln("WebAPI: Request isGroupIDValidPostMethod:", context.Request.URL.Path, " done. Value is ", strconv.FormatBool(config.IsGroupIDValid(gId)))
 }

@@ -55,7 +55,7 @@ func ExitHandle(exitChan chan os.Signal) {
 
 }
 
-// 生成6位随机验证码（数字）
+// 生成6位随机验证码（数字）(生成6位ID)
 func Captcha1() (int, error) {
 	return strconv.Atoi(fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000)))
 }

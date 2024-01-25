@@ -65,6 +65,7 @@ func add(context *gin.Context) {
 				break
 			}
 		}
+		deviceId = t
 	}
 	logrus.Info("WebAPi: add deviceId:", deviceId, " ,devicesWeight:", devicesWeight, " ,devicesToken:", devicesToken, " ,deviceName", deviceName, " ,deviceFlag:", deviceFlag, " ,groupId:", groupId)
 	err := config.DeviceAdd(deviceId, devicesWeight, devicesToken, deviceName, deviceFlag, groupId)
