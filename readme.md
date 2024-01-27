@@ -67,3 +67,6 @@ go mod tidy
 go build main.go
 ```
 
+# 许可
+
+你可以自由分发，并在MIT的限制范围内做你想做的事。
