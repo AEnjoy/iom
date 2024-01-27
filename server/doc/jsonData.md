@@ -43,7 +43,12 @@
 }
 ```
 
-### 请求设备是否在线API /api/devices/getdevices
+### 请求设备在线设备API /api/devices/get-devices
+
+由于在线的设备可以获取到系统信息，因此可以获取更加细致的Type内容 0：Windows 1Linux
+
+请求所有设备/api/devices/get-all-devices(如果使用的是次请求，则Type为如下值0:StandDevices,1:PVE,2:OpenStack,3:k8sHost)
+
 ```json
 [
   {

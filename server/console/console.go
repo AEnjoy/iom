@@ -13,7 +13,7 @@ import (
 
 var failTimes = 0
 
-func Home() {
+func home() {
 	goto login
 login:
 	//global.Read = bufio.NewReader(os.Stdin)

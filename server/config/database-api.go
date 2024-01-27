@@ -92,7 +92,7 @@ func DBOpen() {
 			err = rowst.Scan(&dt1.DevicesID)
 			rowst1, _ := Db.Query("SELECT * FROM Devices where DevicesID=?", dt1.DevicesID)
 			rowst1.Next()
-			rowst1.Scan(&dt1.DevicesID, &dt1.Weight, &dt1.Token, &dt1.DevicesName, &dt1.flag, &dt1.AddedTime, &dt1.LastDataTime)
+			rowst1.Scan(&dt1.DevicesID, &dt1.Weight, &dt1.Token, &dt1.DevicesName, &dt1.Flag, &dt1.AddedTime, &dt1.LastDataTime)
 			if dt1.Token == "" {
 				continue
 			}
@@ -101,7 +101,7 @@ func DBOpen() {
 			dt3.Online = false
 			dt3.ClientID = dt1.Token
 			global.DevicesInfos[dt1.Token] = dt3
-			println("Debug:100", global.DevicesInfos[dt1.Token].ClientID)
+			//println("Debug:100", global.DevicesInfos[dt1.Token].ClientID)
 			rowst1.Close()
 		}
 		rowst.Close()

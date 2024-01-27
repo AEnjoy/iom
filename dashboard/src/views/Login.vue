@@ -1,6 +1,6 @@
 <script setup>
 import { ElNotification } from 'element-plus'
-import {Lock, User} from "@element-plus/icons-vue";
+import { Lock, User } from "@element-plus/icons-vue";
 const forgetPassword = () => {
   ElNotification({
     title: '注意',
@@ -57,8 +57,7 @@ const forgetPassword = () => {
 <script>
 //import "../assets/less/login.less"
 import { ElMessageBox } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
-import axios from "axios";
+import axios from "@/api/axiosInstance";
 export default {
   name: "login",
   data() {
@@ -76,7 +75,7 @@ export default {
   beforeMount() {
     axios.get('/api/auth/signin').then(response => {
       if (response.status === 200) {
-        this.goRouter({ name: 'home' });
+        //this.goRouter({ name: 'home' });
       }
     }, error => {
       console.log('E', error.message)
@@ -86,7 +85,6 @@ export default {
     //路由跳转
     goRouter(path) {
       this.$router.push(path)
-      //this.$router.replace(path)
     },
     //表单提交-----登录
     login(formName) {
@@ -95,16 +93,17 @@ export default {
       params.append('username', formName.name);
       params.append('password', formName.password);
       axios.post('/api/auth/signin', params).then(response => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           ElMessageBox.alert("登录成功", "登录成功", {})
-          this.goRouter({ name: 'home' });
+          //this.goRouter({ name: 'home' });
           //ok
-        } else if (response.status == 401) {
+          this.$emit('login-flag', 1);
+        } else if (response.status === 401) {
           ElMessageBox.alert("用户名或密码错误", "登录失败", {})
         }
       }, error => {
-         console.log('E', error.message)
-        if (error.status == 500) {
+        console.log('E', error.message)
+        if (error.status === 500) {
           ElMessageBox.alert('后端服务器出现致命错误 Code:500', '登录错误', {
             // if you want to disable its autofocus
             // autofocus: false,
@@ -116,12 +115,10 @@ export default {
               })
             },
           })
-          return
-        } else if (response.status == 401) {
+        } else if (response.status === 401) {
           ElMessageBox.alert("用户名或密码错误", "登录失败", {})
-          return
-        }else{
-          ElMessageBox.alert("未知错误 Code"+error.status, "出错啦", {})
+        } else {
+          ElMessageBox.alert("未知错误 Code" + error.status, "出错啦", {})
         }
       })
     }

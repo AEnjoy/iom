@@ -141,11 +141,15 @@ token/cookie不被授权时，将返回401 StatusUnauthorized。错误消息 “
 
 
 
-#### /api/devices/getdevices获取所有**已上线**的设备列表
+#### /api/devices/get-devices获取所有**已上线**的设备列表
+
+/api/devices/get-all-devices[?groupID=xxx]获取**所有**的设备列表（包括不在线）
 
 > 参数
 >
 > null
+> 
+> 如果指定groupID，则返回该组下的所有设备列表，否则返回全部设备列表
 
 如果成功，返回200，JSON数据 设备列表 JSON定义请参考[jsonData.md](jsonData.md)
 

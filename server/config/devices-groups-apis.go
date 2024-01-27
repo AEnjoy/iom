@@ -63,7 +63,7 @@ func DeviceAdd(deviceId int, devicesWeight int, devicesToken string,
 	devices.DevicesName = deviceName
 	devices.Weight = devicesWeight
 	devices.Token = devicesToken
-	devices.flag = deviceFlag
+	devices.Flag = deviceFlag
 	devices.AddedTime = addedTime
 	devices.LastDataTime = addedTime
 	var dt DevicesGroup

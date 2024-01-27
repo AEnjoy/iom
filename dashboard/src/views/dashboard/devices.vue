@@ -27,25 +27,24 @@ const customColorMethod = (percentage) => {
         <div class="content" style="margin-top: 10px; padding-bottom: 5px;">
           <div class="header">
             <img :src="CountryPicUrl" alt="国家"
-                 style="border-radius: 50%; box-shadow: rgb(238, 238, 238) -1px -1px 2px, rgb(0, 0, 0) 1px 1px 2px; width: 19px;">
-            &nbsp;<i
-              :class="classOs"></i>
+              style="border-radius: 50%; box-shadow: rgb(238, 238, 238) -1px -1px 2px, rgb(0, 0, 0) 1px 1px 2px; width: 19px;">
+            &nbsp;<i :class="classOs"></i>
             {{ PlatformVersion }}
             <i class="info circle icon" style="height: 28px;"></i>
             <div class="ui content popup" style="margin-bottom: 0px;">
-              系统: {{Platform}}
+              系统: {{ Platform }}
               <br>
               CPU: [
               {{ CPU }}
               ]{{ Virtualization }}<br>
               硬盘:
-              {{ DiskUsed }}GB/{{ DiskTotal}}GB<br>
+              {{ DiskUsed }}GB/{{ DiskTotal }}GB<br>
               内存:
-              {{ MemUsed}}GB/{{ MemTotal}}GB<br>
+              {{ MemUsed }}GB/{{ MemTotal }}GB<br>
               交换:
-              {{ SwapUsed}}GB/{{ SwapTotal}}GB<br>
-              流量: <i class="arrow alternate circle down outline icon"></i><br>{{ NetInTransfer}} KB / <i
-                class="arrow alternate circle up outline icon"></i>{{ NetOutTransfer}} KB<br>
+              {{ SwapUsed }}GB/{{ SwapTotal }}GB<br>
+              流量: <i class="arrow alternate circle down outline icon"></i><br>{{ NetInTransfer }} KB / <i
+                class="arrow alternate circle up outline icon"></i>{{ NetOutTransfer }} KB<br>
               负载: {{ [Load1, Load5, Load15] }}<br>
               进程数: {{ ProcessCount }}<br>
               连接数: TCP {{ TcpConnCount }} / UDP {{ UdpConnCount }}<br>
@@ -71,9 +70,9 @@ const customColorMethod = (percentage) => {
               </div>
               <div class="three wide column">网络</div>
               <div class="thirteen wide column"><i class="arrow alternate circle down outline icon"></i>
-                {{ NetOutSpeed}}
+                {{ NetOutSpeed }}
                 <i class="arrow alternate circle up outline icon"></i>
-                {{ NetInSpeed}}
+                {{ NetInSpeed }}
               </div>
               <div class="three wide column">流量</div>
               <div class="thirteen wide column"><i class="arrow circle down icon"></i>
@@ -101,65 +100,65 @@ const customColorMethod = (percentage) => {
       </div>
     </el-aside>
     <el-main>
-      <FuncDevice device="snlspjrnzxcevyfk"/>
+      <FuncDevice device="snlspjrnzxcevyfk" />
     </el-main>
-    </el-container>
+  </el-container>
 </template>
 <script>
-import {ref} from "vue";
+import { ref } from "vue";
 import axios from "@/api/axiosInstance";
 
-export default{
-  data(){
-    return{
-      deviceID:ref(this.device),
-      MemUsed:ref(0) ,
-      ClientID :ref(''),//: ref(obj.ClientID),
-      SwapUsed :ref(0),//:ref(obj.HostState.SwapUsed),
-      DiskUsed:ref(0),// : ref(obj.HostState.DiskUsed),
-      CPUUsed:ref(0),//:ref(obj.HostState.CPU),
-      NetInTransfer :ref(0),
-      NetOutTransfer :ref(0),
-      NetInSpeed:ref(0),
-      NetOutSpeed:ref(0) ,
-      Uptime:ref(0),
-      Load1 :ref(0),
-      Load5:ref(0),
-      Load15 :ref(0),
-      TcpConnCount:ref(0),
-      UdpConnCount :ref(0),
-      ProcessCount :ref(0),//: ref(obj.HostState.ProcessCount),
+export default {
+  data() {
+    return {
+      deviceID: ref(this.device),
+      MemUsed: ref(0),
+      ClientID: ref(''),//: ref(obj.ClientID),
+      SwapUsed: ref(0),//:ref(obj.HostState.SwapUsed),
+      DiskUsed: ref(0),// : ref(obj.HostState.DiskUsed),
+      CPUUsed: ref(0),//:ref(obj.HostState.CPU),
+      NetInTransfer: ref(0),
+      NetOutTransfer: ref(0),
+      NetInSpeed: ref(0),
+      NetOutSpeed: ref(0),
+      Uptime: ref(0),
+      Load1: ref(0),
+      Load5: ref(0),
+      Load15: ref(0),
+      TcpConnCount: ref(0),
+      UdpConnCount: ref(0),
+      ProcessCount: ref(0),//: ref(obj.HostState.ProcessCount),
       //
-      Platform :ref(''),//: ref(obj.HostInfo.Platform),
-      PlatformVersion:ref(''),
-      CPU:ref(null) ,
-      MemTotal :ref(0),
-      DiskTotal:ref(0) ,
-      SwapTotal :ref(0),
-      Arch:ref('') ,
-      Virtualization :ref(''),
-      BootTime :ref(0),
-      CountryCode:ref(''),
-      Version :ref(''),
-          //
-      DataTime :ref(''),
-      Online :ref(false),
-      CountryPicUrl:ref(''),
+      Platform: ref(''),//: ref(obj.HostInfo.Platform),
+      PlatformVersion: ref(''),
+      CPU: ref(null),
+      MemTotal: ref(0),
+      DiskTotal: ref(0),
+      SwapTotal: ref(0),
+      Arch: ref(''),
+      Virtualization: ref(''),
+      BootTime: ref(0),
+      CountryCode: ref(''),
+      Version: ref(''),
+      //
+      DataTime: ref(''),
+      Online: ref(false),
+      CountryPicUrl: ref(''),
       //百分比数据：
-      MemUsedPercent:ref(0),
-      SwapUsedPercent:ref(0),
-      DiskUsedPercent:ref(0),
+      MemUsedPercent: ref(0),
+      SwapUsedPercent: ref(0),
+      DiskUsedPercent: ref(0),
     };
   },
   /*async*/
-  mounted(){this.start();},
-  methods:{
-    async getData(){
+  mounted() { this.start(); },
+  methods: {
+    async getData() {
       try {
-        let obj1=await (await axios.get("/api/devices/" + this.device + "/info"))
+        let obj1 = await (await axios.get("/api/devices/" + this.device + "/info"))
         let obj = obj1.data
-        if(obj1.status!==200){
-          console.error(obj1.statusText,"数据获取失败")
+        if (obj1.status !== 200) {
+          console.error(obj1.statusText, "数据获取失败")
           return
         }
         this.deviceID = ref(obj.ClientID)
@@ -173,7 +172,7 @@ export default{
         this.MemUsed = ref((obj.HostState.MemUsed / 1024 / 1024 / 1024).toFixed(2))
         this.SwapUsed = ref((obj.HostState.SwapUsed / 1024 / 1024 / 1024).toFixed(2))
         this.DiskUsed = ref((obj.HostState.DiskUsed / 1024 / 1024 / 1024).toFixed(2))
-        this.CPUUsed = ref((obj.HostState.CPU*100).toFixed(2))
+        this.CPUUsed = ref((obj.HostState.CPU * 100).toFixed(2))
         this.NetInTransfer = ref(obj.HostState.NetInTransfer)
         this.NetOutTransfer = ref(obj.HostState.NetOutTransfer)
         this.NetInSpeed = ref(obj.HostState.NetInSpeed)
@@ -189,13 +188,13 @@ export default{
         this.Platform = ref(obj.HostInfo.Platform)
         this.PlatformVersion = ref(obj.HostInfo.PlatformVersion)
         this.CPU = ref(obj.HostInfo.CPU)
-        this.MemTotal = ref((obj.HostInfo.MemTotal/ 1024 / 1024 / 1024).toFixed(2))
+        this.MemTotal = ref((obj.HostInfo.MemTotal / 1024 / 1024 / 1024).toFixed(2))
         this.DiskTotal = ref((obj.HostInfo.DiskTotal / 1024 / 1024 / 1024).toFixed(2))
-        this.SwapTotal = ref((obj.HostInfo.SwapTotal/ 1024 / 1024 / 1024).toFixed(2))
+        this.SwapTotal = ref((obj.HostInfo.SwapTotal / 1024 / 1024 / 1024).toFixed(2))
 
-        this.MemUsedPercent=ref((this.MemUsed/this.MemTotal*100).toFixed(2))//
-        this.DiskUsedPercent=ref((this.DiskUsed/this.DiskTotal*100).toFixed(2))
-        this.SwapUsedPercent=ref((this.SwapUsed/this.SwapTotal*100).toFixed(2))
+        this.MemUsedPercent = ref((this.MemUsed / this.MemTotal * 100).toFixed(2))//
+        this.DiskUsedPercent = ref((this.DiskUsed / this.DiskTotal * 100).toFixed(2))
+        this.SwapUsedPercent = ref((this.SwapUsed / this.SwapTotal * 100).toFixed(2))
 
         this.Arch = ref(obj.HostInfo.Arch)
         this.Virtualization = ref(obj.HostInfo.Virtualization)
@@ -203,17 +202,17 @@ export default{
         this.CountryCode = ref(obj.HostInfo.CountryCode)
         this.Version = ref(obj.HostInfo.Version)
         //
-      }catch (error){
-        console.error("数据获取失败",error)
+      } catch (error) {
+        console.error("数据获取失败", error)
       }
     },
-      start(){
-        this.timer = setInterval(this.getData, 2000); //ms
-      },
-      over(){
-        clearInterval(this.timer);
-      }
+    start() {
+      this.timer = setInterval(this.getData, 2000); //ms
     },
+    over() {
+      clearInterval(this.timer);
+    }
+  },
   beforeDestroy() {
     clearInterval(this.timer);
   },
@@ -275,7 +274,7 @@ export default{
   transition: -webkit-box-shadow .1s ease, -webkit-transform .1s ease;
   transition: box-shadow .1s ease, transform .1s ease;
   transition: box-shadow .1s ease, transform .1s ease, -webkit-box-shadow .1s ease, -webkit-transform .1s ease;
-  //z-index: 'auto';
+  z-index: 'auto';
 }
 
 .ui.card {

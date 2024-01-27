@@ -1,11 +1,42 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <RouterView />
+  <Login v-if="loadFlag === 0" @login-flag="getFlag" />
+  <Dashboard v-if="loadFlag === 1" />
 </template>
+<script>
+import axios from "@/api/axiosInstance";
+import Login from './views/Login.vue'
+import Dashboard from './views/dashboard/index.vue'
+export default {
+  data() {
+    return {
+      loadFlag: 0
+    }
+  },
+  async beforeMount() {
+    await axios.get('/api/auth/signin').then(response => {
+      if (response.status === 200) {
+        this.loadFlag = 1
+      }
+    }, error => {
+      console.log('E', error.message)
+    })
+    console.log(this.loadFlag)
+    //loadFlag = 1
+  },
+  components: {
+    Login,
+    Dashboard
+  },
+  methods: {
+    getFlag(msg) {
+      this.loadFlag = msg
+    }
+  }
+}
+</script>
 
 <style scoped>
 header {

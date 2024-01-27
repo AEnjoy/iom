@@ -18,6 +18,7 @@ import t from  './device/device-add.vue'
               <!--div class="left"><LodeDevice device="snlspjrnzxcevyfk"/></div-->
               <!--div class="right"><FuncDevice device="snlspjrnzxcevyfk"/></div-->
               <t/>
+
             </el-main>
             <el-footer>
                 <Footer/>

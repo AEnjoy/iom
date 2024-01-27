@@ -67,7 +67,7 @@ func add(context *gin.Context) {
 		}
 		deviceId = t
 	}
-	logrus.Info("WebAPi: add deviceId:", deviceId, " ,devicesWeight:", devicesWeight, " ,devicesToken:", devicesToken, " ,deviceName", deviceName, " ,deviceFlag:", deviceFlag, " ,groupId:", groupId)
+	logrus.Info("WebAPi: add deviceId:", deviceId, " ,devicesWeight:", devicesWeight, " ,devicesToken:", devicesToken, " ,deviceName:", deviceName, " ,deviceFlag:", deviceFlag, " ,groupId:", groupId)
 	err := config.DeviceAdd(deviceId, devicesWeight, devicesToken, deviceName, deviceFlag, groupId)
 	if err != nil {
 		context.String(http.StatusInternalServerError, "add device failed. Info:", err.Error())

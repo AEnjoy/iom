@@ -19,7 +19,7 @@ type Devices struct {
 	DevicesID    int
 	Token        string //clientToken
 	DevicesName  string
-	flag         int //0:StandDevices,1:PVE,2:OpenStack,3:k8sHost
+	Flag         int //0:StandDevices,1:PVE,2:OpenStack,3:k8sHost
 	AddedTime    time.Time
 	LastDataTime time.Time
 
