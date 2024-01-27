@@ -11,8 +11,8 @@ import (
 // Get
 func signInAuth(context *gin.Context) {
 	if global.IsCookieAuthValid(context) { //防止反复登录授权
-		//context.String(http.StatusOK, "ok")
-		context.Redirect(302, "/dashboard")
+		context.String(http.StatusOK, "ok")
+		//context.Redirect(302, "/dashboard")
 		return
 	}
 	un := context.DefaultQuery("username", "")

@@ -3,6 +3,7 @@ package config
 import (
 	"IOM/server/global"
 	"database/sql"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
