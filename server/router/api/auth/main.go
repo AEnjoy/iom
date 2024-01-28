@@ -19,4 +19,5 @@ func Main() {
 	global.Router.GET("/auth/signin", signInAuth)
 	global.Router.POST("/auth/signin", signInAuthP)
 	//
+	go timeToClen()
 }

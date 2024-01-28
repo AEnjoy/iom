@@ -7,9 +7,6 @@ var Router *gin.Engine
 
 //var Read *bufio.Reader
 
-var RPCPort = "" //default 10000
-var WebPort = "" //default 8088
-
 type TokenTimeToLife struct {
 	Valid bool
 	Time  time.Time
