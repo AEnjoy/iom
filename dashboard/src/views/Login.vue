@@ -56,7 +56,7 @@ const forgetPassword = () => {
 
 <script>
 //import "../assets/less/login.less"
-import { ElMessageBox } from 'element-plus'
+import {ElMessageBox, ElNotification} from 'element-plus'
 import axios from "@/api/axiosInstance";
 export default {
   name: "login",
@@ -87,40 +87,43 @@ export default {
       this.$router.push(path)
     },
     //表单提交-----登录
-    login(formName) {
+    async login(formName) {
       console.log(formName)
       var params = new URLSearchParams();
       params.append('username', formName.name);
       params.append('password', formName.password);
-      axios.post('/api/auth/signin', params).then(response => {
-        if (response.status === 200) {
-          ElMessageBox.alert("登录成功", "登录成功", {})
-          //this.goRouter({ name: 'home' });
-          //ok
-          this.$emit('login-flag', 1);
-        } else if (response.status === 401) {
-          ElMessageBox.alert("用户名或密码错误", "登录失败", {})
-        }
-      }, error => {
+      let response = await axios.post('/api/auth/signin', params)
+      //.then(response => {
+      if (response.status === 200) {
+        ElMessageBox.alert("登录成功", "登录成功", {})
+        //this.goRouter({ name: 'home' });
+        //ok
+        this.$emit('login-flag', 1);
+      } else if (response.status === 401){
+        ElNotification({
+          title: 'Error',
+          dangerouslyUseHTMLString: true,
+          message: '<strong>用户名或密码不正确</strong>',
+          type: 'info',
+        })
+      }
+      else if (error.status === 500) {
+        ElMessageBox.alert('后端服务器出现致命错误 Code:500', '登录错误', {
+          // if you want to disable its autofocus
+          // autofocus: false,
+          confirmButtonText: 'OK',
+          callback: (action) => {
+            ElMessage({
+              type: 'error',
+              message: `action: ${action}`,
+            })
+          },
+        })
+      }
+      else {
         console.log('E', error.message)
-        if (error.status === 500) {
-          ElMessageBox.alert('后端服务器出现致命错误 Code:500', '登录错误', {
-            // if you want to disable its autofocus
-            // autofocus: false,
-            confirmButtonText: 'OK',
-            callback: (action) => {
-              ElMessage({
-                type: 'error',
-                message: `action: ${action}`,
-              })
-            },
-          })
-        } else if (response.status === 401) {
-          ElMessageBox.alert("用户名或密码错误", "登录失败", {})
-        } else {
-          ElMessageBox.alert("未知错误 Code" + error.status, "出错啦", {})
-        }
-      })
+        ElMessageBox.alert("未知错误 Code" + error.status, "出错啦", {})
+      }
     }
   },
 

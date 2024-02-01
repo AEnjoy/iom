@@ -36,7 +36,7 @@ func DashboardShowDevicesStateC(groupID int, devicesID int) {
 		println("\t----\t")
 		return
 	}
-	logrus.Error("E:未找到设备信息")
+	logrus.Error("E:DashboardShowDevicesStateC:未找到设备信息 DevicesID:", devicesID)
 }
 func ConfigEditC() {
 	var confName string
@@ -49,9 +49,9 @@ func ConfigEditC() {
 		fmt.Println("配置值值:")
 		fmt.Scanln(&confValue)
 		config.Edit(-1, confName, confValue)
-		logrus.Info("配置项修改-name，value:", confName, confValue)
+		logrus.Info("ConfigEditC:配置项修改-name，value:", confName, confValue)
 	} else {
-		logrus.Errorln("E:配置项不存在")
+		logrus.Errorln("E:ConfigEditC:配置项不存在 name:", confName)
 	}
 }
 func AdminAddC() {
@@ -62,14 +62,14 @@ func AdminAddC() {
 	fmt.Println("管理员密码:")
 	fmt.Scanln(&adminPwd)
 	config.AdminAccountAdd(adminName, adminPwd)
-	logrus.Info("管理员添加-name，pwd:", adminName, adminPwd)
+	logrus.Info("AdminAddC:管理员添加-name，pwd:", adminName, adminPwd)
 }
 func AdminDelC() {
 	var adminName string
 	fmt.Println("管理员账号:")
 	fmt.Scanln(&adminName)
 	config.AdminAccountDel(adminName)
-	logrus.Info("管理员删除-name:", adminName)
+	logrus.Info("AdminDelC:管理员删除-name:", adminName)
 }
 func AdminEditC() {
 	var adminName string
@@ -79,17 +79,17 @@ func AdminEditC() {
 	fmt.Println("新密码:")
 	fmt.Scanln(&adminPwd)
 	config.AdminAccountEdit(adminName, adminPwd)
-	logrus.Info("管理员密码修改-name，pwd:", adminName, adminPwd)
+	logrus.Info("AdminEditC:管理员密码修改-name，pwd:", adminName, adminPwd)
 }
 func PrintPackagesC(id int) {
 	token := config.DeviceIDGetDeviceToken(id)
 	dt, ok := global.PackagesInfo[token]
 	if ok {
-		logrus.Info("软件包信息输出Console")
+		logrus.Info("PrintPackagesC:软件包信息输出Console")
 		println("DevicesToken:", dt.Token, ' ', "DevicesID:", id)
 		for _, p := range dt.Packages {
 			println("软件包名:", p.Name, " 软件包版本:", p.Version, " 软件包架构:", p.Arch, " 软件包存储库:", p.Repository, " 软件包描述信息:", p.Description)
 		}
 	}
-	logrus.Error("找不到该设备的软件包信息")
+	logrus.Error("PrintPackagesC:找不到该设备的软件包信息")
 }

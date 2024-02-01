@@ -10,6 +10,7 @@ func Main() {
 	global.Router.GET("/api/captcha", createCode) //pic
 	global.Router.GET("/api/group/search/name-get-id", groupNameGetGroupIDGetMethod)
 	global.Router.GET("/api/group/id/is-valid", isGroupIDValidGetMethod)
+	global.Router.GET("/api/group/get-list", getGroupList)
 	global.Router.POST("/api/captcha/verify", verify)
 	global.Router.POST("/api/user-password-change", passwordChange)
 	global.Router.POST("/api/group/search/name-get-id", groupNameGetGroupIDPostMethod)

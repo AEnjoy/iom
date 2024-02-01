@@ -19,7 +19,8 @@ import (
 // 自定义初始化
 func Init() {
 	//log init
-	t := time.Now().Format("2006-01-02")
+	//config.StartTime = time.Now()
+	t := config.StartTime.Format("2006-01-02")
 	logf, _ := os.OpenFile("./logs/"+t+"iomServer.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	mw := io.MultiWriter(os.Stdout, logf)
 	exitChan := make(chan os.Signal)
@@ -34,6 +35,7 @@ func Init() {
 	global.TaskListInit()
 	//go urltools.Handle()
 	config.DBOpen()
+	go config.LoadOnceToken()
 	go rpc.ServerStart()
 	go global.TimeToCheckOnline()
 	go global.TimeToCheckTokenIsValid()
@@ -47,6 +49,7 @@ func Main() {
 	pflag.BoolVarP(&shell, "shell", "c", false, "启动 IO&M console管理控制台")
 	pflag.BoolVarP(&server, "web", "w", false, "启动 IO&M Web管理面板")
 	pflag.BoolVar(&admin, "getAdmin", false, "Show IO&M Dashboard Admin Password and Username and exit.")
+	pflag.BoolVarP(&global.DebugFlag, "debug", "d", false, "Debug mode 将显示一些额外信息，并忽略一些错误，可能会泄露某些数据。")
 	pflag.BoolVarP(&version, "version", "V", false, "Show IO&MServer version and exit.")
 	pflag.Parse()
 

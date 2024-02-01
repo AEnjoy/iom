@@ -12,6 +12,11 @@ type DevicesInfo struct {
 	// 格式化时间
 	FormatTime string
 }
+type AlarmInfo struct {
+	DeviceID int
+	Info     string
+	Time     time.Time
+}
 
 type HostState struct {
 	CPU            float64

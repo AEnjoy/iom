@@ -44,6 +44,7 @@ func signInAuth(context *gin.Context) {
 	//println(t, v, ok)
 	if ok {
 		context.SetCookie("IOMAuth", t, 3600*24, "", context.Request.Host, false, false)
+		context.SetCookie("username", un, 3600*24, "", context.Request.Host, false, false)
 		//context.Redirect(302, "/dashboard")
 		context.String(http.StatusOK, t)
 		return
@@ -89,6 +90,7 @@ func signInAuthP(context *gin.Context) {
 	//println(t, v, ok)
 	if ok {
 		context.SetCookie("IOMAuth", t, 3600*24, "", context.Request.Host, false, false)
+		context.SetCookie("username", un, 3600*24, "", context.Request.Host, false, false)
 		//context.Redirect(302, "/dashboard")
 		context.String(http.StatusOK, t)
 		return

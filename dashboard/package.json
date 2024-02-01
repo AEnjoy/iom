@@ -12,6 +12,8 @@
     "@vueuse/core": "^10.7.0",
     "axios": "^1.5.1",
     "cors": "^2.8.5",
+    "echarts": "^5.4.3",
+    "js-cookie": "^3.0.5",
     "pinia": "^2.1.7",
     "scss": "^0.2.4",
     "vform3-builds": "^3.0.10",

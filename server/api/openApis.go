@@ -2,6 +2,7 @@ package api
 
 import (
 	"IOM/server/config"
+	"IOM/server/utils/debugTools"
 	"bufio"
 	"fmt"
 	"github.com/sirupsen/logrus"
@@ -26,6 +27,8 @@ func Exit(code int, msg ...interface{}) {
 	}
 	logrus.Info("ServerExitWithCode:", code)
 	UnLock()
+	logrus.Info("SaveOnceToken")
+	config.SaveOnceToken2()
 	os.Exit(code)
 }
 func FileReadAll(filename string) string {
@@ -41,13 +44,14 @@ func FileReadAll(filename string) string {
 			str = str + s
 		}
 	}
+	debugTools.PrintLogsOnlyInDebugMode("FileReadAll:", str)
 	return str
 }
 func ExitHandle(exitChan chan os.Signal) {
 	for {
 		select {
 		case sig := <-exitChan:
-			logrus.Info("收到来自系统的信号：", sig)
+			debugTools.PrintLogs("收到来自系统的信号：", sig)
 			config.DBExitSave()
 			Exit(2, sig.String())
 		}
@@ -57,7 +61,9 @@ func ExitHandle(exitChan chan os.Signal) {
 
 // 生成6位随机验证码（数字）(生成6位ID)
 func Captcha1() (int, error) {
-	return strconv.Atoi(fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000)))
+	a, b := strconv.Atoi(fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000)))
+	debugTools.PrintLogsOnlyInDebugMode("Captcha1Api:", a, b)
+	return a, b
 }
 
 // 生成16位随机ID（字母）
@@ -68,5 +74,6 @@ func Capthca2() string {
 	for i := 0; i < n; i++ {
 		sb.WriteByte(charset[rand.Intn(len(charset))])
 	}
+	debugTools.PrintLogsOnlyInDebugMode("Captcha2Api:", sb.String())
 	return sb.String()
 }

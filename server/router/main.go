@@ -6,6 +6,7 @@ import (
 	"IOM/server/router/api/auth"
 	"IOM/server/router/api/devices"
 	"IOM/server/router/api/res/file"
+	"IOM/server/router/dashboard"
 	"github.com/sirupsen/logrus"
 	"net/http"
 
@@ -59,6 +60,7 @@ func regRouter() {
 	go devices.Main()
 	go api.Main()
 	go otherApis()
+	go dashboard.Main()
 	go main()
 	time.Sleep(time.Second / 2)
 }

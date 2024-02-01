@@ -52,6 +52,10 @@ func getAllDevices(context *gin.Context) {
 	logrus.Info("WebAPI: Request getAllDevices: ", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	gID, _ := strconv.Atoi(context.DefaultQuery("groupID", "-1"))
+	t1 := context.PostForm("groupID")
+	if t1 != "" {
+		gID, _ = strconv.Atoi(t1)
+	}
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")
 		logrus.Errorln("WebAPI: Request ", context.Request.URL.Path, " token is invalid.")
@@ -75,6 +79,60 @@ func getAllDevices(context *gin.Context) {
 		for _, dev := range config.DevicesGroupEX[gID].DevicesListID {
 			var t devicesList
 			t.Token = dev.Token
+			t.Type = dev.Flag
+			dt = append(dt, t)
+		}
+	} else {
+		context.String(http.StatusBadRequest, "groupID is invalid")
+		logrus.Errorln("WebAPI: Request ", context.Request.URL.Path, " groupID is invalid.")
+		return
+	}
+	context.JSON(http.StatusOK, dt)
+	logrus.Info("WebAPI: Request ", context.Request.URL.Path, " success.")
+}
+
+// getAllDevicesV2 获取所有设备信息（包括不在线的） (不指定groupID则获取全部)
+// http://127.0.0.1:8088/api/v2/devices/get-all-devices?token=xxx[&groupID=xxx]
+func getAllDevicesV2(context *gin.Context) {
+	logrus.Info("WebAPI: Request getAllDevices: ", context.Request.URL.Path)
+	token := context.DefaultQuery("token", "")
+	gID, _ := strconv.Atoi(context.DefaultQuery("groupID", "-1"))
+	t1 := context.PostForm("groupID")
+	if t1 != "" {
+		gID, _ = strconv.Atoi(t1)
+	}
+	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
+		context.String(http.StatusUnauthorized, "token is invalid")
+		logrus.Errorln("WebAPI: Request ", context.Request.URL.Path, " token is invalid.")
+		return
+	}
+	type devicesList struct {
+		Name      string
+		GroupID   int
+		GroupName string
+		Token     string
+		Type      int //0:StandDevices,1:PVE,2:OpenStack,3:k8sHost
+	}
+	var dt []devicesList
+	if gID == -1 {
+		for _, info := range config.DevicesGroupEX {
+			for _, dev := range info.DevicesListID {
+				var t devicesList
+				t.Name = dev.DevicesName
+				t.GroupName = info.GroupName
+				t.GroupID = config.GroupNameGetGroupID(info.GroupName)
+				t.Token = dev.Token
+				t.Type = dev.Flag
+				dt = append(dt, t)
+			}
+		}
+	} else if config.IsGroupIDValid(gID) {
+		for _, dev := range config.DevicesGroupEX[gID].DevicesListID {
+			var t devicesList
+			t.Token = dev.Token
+			t.Name = dev.DevicesName
+			t.GroupID = gID
+			t.GroupName = config.DevicesGroupEX[gID].GroupName
 			t.Type = dev.Flag
 			dt = append(dt, t)
 		}

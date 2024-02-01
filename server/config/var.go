@@ -11,6 +11,7 @@ var Db *sql.DB
 type IOMSystem struct {
 	Account  string //Admin
 	Password string //Admin
+	UserID   int
 }
 
 // 设备

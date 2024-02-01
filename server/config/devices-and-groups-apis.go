@@ -151,3 +151,9 @@ func DeviceTokenGetDeviceName(deviceToken string) (string, error) {
 	}
 	return deviceName, nil
 }
+func GetTodayAddedDevicesMount() int {
+	returnVal := 0
+	t := time.Now().Format("2006-01-02")
+	Db.QueryRow("SELECT count(*) FROM Devices WHERE AddedTime BETWEEN ? and ?", t+" 00:00:00", t+" 23:59:59").Scan(&returnVal)
+	return returnVal
+}

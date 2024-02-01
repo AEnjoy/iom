@@ -2,6 +2,7 @@ package config
 
 import (
 	"IOM/server/global"
+	"IOM/server/utils/debugTools"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sirupsen/logrus"
@@ -20,14 +21,17 @@ func DataBaseInit() {
 		logrus.Errorln("DataBase:Init fail.", err)
 	}
 	logrus.Info("Init DataBase.")
-	db.Exec("CREATE TABLE IOMSystem(Account char(12), Password CHAR(64))")
-	db.Exec("INSERT INTO IOMSystem(Account,Password) VALUES('admin', 'passwords')")
-	db.Exec("CREATE TABLE Devices(DevicesID int primary key,Weight int,Token char(18),DevicesName char(64),flag int,AddedTime time,LastDataTime time null)")
-	db.Exec("CREATE TABLE GroupsA(ID int primary key, GroupName CHAR(64))")
-	db.Exec("CREATE TABLE DevicesGroup(GroupID int references GroupsA(ID),DevicesID int references Devices(DevicesID));")
-	db.Exec("create table Config(ConfigID int primary key, ConfigName char(64), ConfigValue char(64))")
+	db.Exec("DROP TABLE IF EXISTS `IOMSystem`;CREATE TABLE IOMSystem(Account char(12), Password CHAR(64),UserID integer not null )")
+	db.Exec("INSERT INTO IOMSystem(Account,Password,UserID) VALUES('admin', 'passwords',0)")
+	db.Exec("DROP TABLE IF EXISTS `Devices`;CREATE TABLE Devices(DevicesID int primary key,Weight int,Token char(18),DevicesName char(64),flag int,AddedTime time,LastDataTime time null)")
+	db.Exec("DROP TABLE IF EXISTS `GroupsA`;CREATE TABLE GroupsA(ID int primary key, GroupName CHAR(64))")
+	db.Exec("DROP TABLE IF EXISTS `DevicesGroup`;CREATE TABLE DevicesGroup(GroupID int references GroupsA(ID),DevicesID int references Devices(DevicesID));")
+	db.Exec("DROP TABLE IF EXISTS `Config`;create table Config(ConfigID int primary key, ConfigName char(64), ConfigValue char(64))")
 	db.Exec("insert into Config(ConfigID,ConfigName,ConfigValue) values(1,'Port', '10000')")
 	db.Exec("insert into Config(ConfigID,ConfigName,ConfigValue) values(2,'WebPort', '8088')")
+	db.Exec("DROP TABLE IF EXISTS `LoginLog`;create table LoginLog(ID INTEGER PRIMARY KEY AUTOINCREMENT,User char(20),IP char(130),URL char(30),UA char(50),Info char(128),Time time)")
+	db.Exec("DROP TABLE IF EXISTS `WebOperaLog`;create table WebOperaLog(ID INTEGER PRIMARY KEY AUTOINCREMENT,Info char(128),Method char(10),URL char(150),Time time)")
+	db.Exec("DROP TABLE IF EXISTS `OnceToken`;create table OnceToken(ID INTEGER PRIMARY KEY AUTOINCREMENT,Token char(18),Time time)")
 	Db = db
 	logrus.Info("Done.")
 }
@@ -72,10 +76,12 @@ func DBOpen() {
 			global.WebPort = configValue
 		}
 	}
+	TrustUsers = make([]IOMSystem, 0)
+	debugTools.PrintLogs("初始化信任用户列表...")
 	rows, _ = Db.Query("select * from IOMSystem")
 	for rows.Next() {
 		var tSystemInfo IOMSystem
-		rows.Scan(&tSystemInfo.Account, &tSystemInfo.Password)
+		rows.Scan(&tSystemInfo.Account, &tSystemInfo.Password, &tSystemInfo.UserID)
 		TrustUsers = append(TrustUsers, tSystemInfo)
 	}
 	rows.Close()
@@ -87,7 +93,6 @@ func DBOpen() {
 		err = rows.Scan(&ID, &dt.GroupName)
 		rowst, _ := Db.Query("SELECT DevicesID FROM DevicesGroup where GroupID=?", strconv.Itoa(ID))
 		for rowst.Next() {
-			//println("Debug 86")
 			var dt1 Devices
 			err = rowst.Scan(&dt1.DevicesID)
 			rowst1, _ := Db.Query("SELECT * FROM Devices where DevicesID=?", dt1.DevicesID)
@@ -101,7 +106,6 @@ func DBOpen() {
 			dt3.Online = false
 			dt3.ClientID = dt1.Token
 			global.DevicesInfos[dt1.Token] = dt3
-			//println("Debug:100", global.DevicesInfos[dt1.Token].ClientID)
 			rowst1.Close()
 		}
 		rowst.Close()
@@ -118,4 +122,22 @@ func DBExitSave() {
 			Db.Exec("UPDATE Devices SET LastDataTime=? WHERE Token=?", info.DataTime, token)
 		}
 	}
+}
+func ResetDataBase() {
+	logrus.Info("DataBase:Reset DataBase")
+	Db.Close()
+	e := os.Remove("data/config.db")
+	if e != nil {
+		logrus.Errorln("IOM:尝试删除data/config.db失败 Info:", e)
+		if !debugTools.PrintLogsOnlyInDebugMode("调试模式已启动，将跳过删除data/config.db的步骤") {
+			logrus.Panic("出现致命错误 ")
+			os.Exit(1)
+		}
+	}
+	//清空加载的配置项
+	global.DevicesInfos = make(map[string]global.DevicesInfo)
+	DevicesGroupEX = make(map[int]DevicesGroup)
+	TrustUsers = make([]IOMSystem, 0)
+	DataBaseInit()
+	DBOpen()
 }

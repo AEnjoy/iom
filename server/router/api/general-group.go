@@ -147,3 +147,28 @@ func isGroupIDValidPostMethod(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"Status": strconv.FormatBool(config.IsGroupIDValid(gId))})
 	logrus.Infoln("WebAPI: Request isGroupIDValidPostMethod:", context.Request.URL.Path, " done. Value is ", strconv.FormatBool(config.IsGroupIDValid(gId)))
 }
+
+// getGroupList
+// curl http://localhost:8088/api/group/get-list
+func getGroupList(context *gin.Context) {
+	logrus.Info("WebAPI: Request getGroupList:", context.Request.URL.Path)
+	token := context.DefaultQuery("token", "")
+	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
+		context.String(http.StatusUnauthorized, "token is invalid")
+		logrus.Errorln("WebAPI: Request get:", context.Request.URL.Path, " token is invalid.")
+		return
+	}
+	type group struct {
+		GroupID   int
+		GroupName string
+	}
+	var groupList []group
+	for _, info := range config.DevicesGroupEX {
+		var t group
+		t.GroupID = config.GroupNameGetGroupID(info.GroupName)
+		t.GroupName = info.GroupName
+		groupList = append(groupList, t)
+	}
+	context.JSON(http.StatusOK, groupList)
+	logrus.Infoln("WebAPI: Request getGroupList:", context.Request.URL.Path, " done.")
+}
