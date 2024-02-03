@@ -1,3 +1,6 @@
 package global
 
-var Version = "0.1.0.0 Alpha"
+var Version string
+var GoVersion string
+var GitHash string
+var BuildTime string

@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-ff
+#你应该优先使用build.sh
 import os
 import sys
 import platform
@@ -51,7 +52,7 @@ def main():
     if not command_exists("go"):
         install_golang()
     subprocess.run(["go", "mod", "tidy", "-y"])
-    subprocess.run(["go", "build", "-o", "./main"])
+    subprocess.run(["go", "build","./main.go"])
     subprocess.run(["docker", "build", "-t", "iom-server:latest", "."])
 
 

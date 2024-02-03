@@ -1,7 +1,6 @@
 package global
 
 import (
-	"IOM/server/utils/debugTools"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -11,8 +10,9 @@ func IsValidToken(token string) bool {
 		return false
 	} //空token的map会返回true
 	temp, ok2 := TrustedTokens[token]
-	if DebugFlag { //当使用调试模式时，将允许直接使用设备token授权
-		debugTools.PrintLogsOnlyInDebugMode("Debug mode, allow access with device token: " + token)
+	if DebugFlag { //当使用调试模式时，将允许直接使
+		// 用设备token授权
+		logrus.Debugln("Debug mode, allow access with device token: " + token)
 		_, ok1 := DevicesInfos[token]
 		return ok1 || (ok2 && temp.Valid)
 	}
@@ -24,6 +24,6 @@ func IsCookieAuthValid(c *gin.Context) bool {
 	if err != nil {
 		logrus.Errorln("Cookie err: " + err.Error())
 	}
-	debugTools.PrintLogsOnlyInDebugMode("API IsCookieAuthValid: get cookie: " + cookie)
+	logrus.Debugln("API IsCookieAuthValid: get cookie: " + cookie)
 	return IsValidToken(cookie)
 }

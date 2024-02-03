@@ -72,8 +72,12 @@ func Main() {
 		IOM.Exit(0, "")
 	}
 	if version {
-		fmt.Println("IOM Server Version: ", global.Version)
-		IOM.Exit(0, "")
+		println("IOM Server Version:", global.Version)
+		println("Build Info:")
+		println("Build Time:", global.BuildTime)
+		println("Build GoVersion:", global.GoVersion)
+		println("Git Commit Hash:", global.GitHash)
+		os.Exit(0)
 	}
 	if !server && !shell {
 		pflag.Usage()
