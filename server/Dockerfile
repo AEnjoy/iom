@@ -4,6 +4,7 @@ LABEL MAINTAINER="IOMServer"
 WORKDIR /go/src/server
 COPY ./main ./
 COPY ./res ./res
+COPY ./index.html ./
 
 RUN chmod 755 ./main
 

@@ -9,6 +9,8 @@ import (
 
 func main() {
 	global.Router.Static("/static", "./res")
+	global.Router.Static("/assets", "./res")
+	global.Router.Static("/index.html", "./index.html")
 	global.Router.GET("/favicon.ico", func(context *gin.Context) {
 		context.Redirect(302, "/static/favicon.ico")
 	})

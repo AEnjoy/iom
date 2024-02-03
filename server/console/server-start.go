@@ -52,6 +52,10 @@ func Main() {
 	pflag.BoolVarP(&global.DebugFlag, "debug", "d", false, "Debug mode 将显示一些额外信息，并忽略一些错误，可能会泄露某些数据。")
 	pflag.BoolVarP(&version, "version", "V", false, "Show IO&MServer version and exit.")
 	pflag.Parse()
+	goDebugEnv := os.Getenv("GO_DEBUG")
+	if goDebugEnv == "1" {
+		global.DebugFlag = true
+	}
 
 	if admin {
 		go config.MapInit()
@@ -71,7 +75,7 @@ func Main() {
 		fmt.Println("IOM Server Version: ", global.Version)
 		IOM.Exit(0, "")
 	}
-	if server == false && shell == false {
+	if !server && !shell {
 		pflag.Usage()
 		IOM.Exit(1, "--server or --shell must be true (两项服务可同时开启)")
 	}
