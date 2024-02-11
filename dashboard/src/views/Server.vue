@@ -9,11 +9,11 @@
               <div class="flex-margin">
                 <div class="home-card-first-right-title">
                   {{ currentTime }}，{{
-                    getUserInfos.username === "" ? "test" : getUserInfos.username
+                    Cookies.get('username') === "" ? "test" : Cookies.get('username')
                   }}！
                 </div>
                 <div class="home-card-first-right-msg mt5">
-                  {{ getUserInfos.username === "admin" ? "超级管理" : "普通用户" }}
+                  {{ Cookies.get('username') === "admin" ? "超级管理" : "普通用户" }}
                 </div>
               </div>
             </div>
@@ -23,28 +23,39 @@
       <el-col :sm="6" class="mb15">
         <div class="home-card-item home-card-item-box" :style="{ background: state.colors[0] }">
           <div class="home-card-item-flex">
-            <div class="home-card-item-title pb3">设备总数</div>
-            <div class="home-card-item-title-num pb6">{{ state.devicePanel.deviceInfo.total }} 个</div>
+            <div class="home-card-item-title pb3">探针总数</div>
+            <div class="home-card-item-title-num pb6">{{ state.devicePanel.DeviceInfo.Total }} 个</div>
             <div class="home-card-item-tip pb3">今日新增</div>
-            <div class="home-card-item-tip-num">{{ state.devicePanel.deviceInfo.todayAdd }} 个</div>
+            <div class="home-card-item-tip-num">{{ state.devicePanel.DeviceInfo.TodayAdd }} 个</div>
           </div>
           <i class="iconfont icon-jinridaiban" :style="{ color: '#14DAB2' }"></i>
         </div>
       </el-col>
       <el-col :sm="6" class="mb15">
-        <div class="home-card-item home-card-item-box" :style="{ background: state.colors[2] }">
+        <div class="home-card-item home-card-item-box" :style="{ background: state.colors[1] }">
           <div class="home-card-item-flex">
             <div class="home-card-item-title pb3">告警总数</div>
-            <div class="home-card-item-title-num pb6">{{ state.devicePanel.alarmInfo.total }} 个</div>
+            <div class="home-card-item-title-num pb6">{{ state.devicePanel.AlarmInfo.Total }} 个</div>
             <div class="home-card-item-tip pb3">今日新增</div>
-            <div class="home-card-item-tip-num">{{ state.devicePanel.alarmInfo.todayAdd }} 个</div>
+            <div class="home-card-item-tip-num">{{ state.devicePanel.AlarmInfo.TodayAdd }} 个</div>
+          </div>
+          <i class="iconfont icon-shenqingkaiban" :style="{ color: '#DE5C2C' }"></i>
+        </div>
+      </el-col>
+      <el-col :sm="6" class="mb15">
+        <div class="home-card-item home-card-item-box" :style="{ background: state.colors[2] }">
+          <div class="home-card-item-flex">
+            <div class="home-card-item-title pb3">机器总数</div>
+            <div class="home-card-item-title-num pb6">{{ state.MachineInfo.Machine }} 个</div>
+            <div class="home-card-item-tip pb3">容器总数</div>
+            <div class="home-card-item-tip-num">{{ state.MachineInfo.Container }} 个</div>
           </div>
           <i class="iconfont icon-shenqingkaiban" :style="{ color: '#DE5C2C' }"></i>
         </div>
       </el-col>
     </el-row>
     <el-row :gutter="15">
-      <el-col :xs="24" :sm="16" :md="16" :lg="12" :xl="12">
+      <el-col :xs="30" :sm="16" :md="16" :lg="12" :xl="12">
         <el-card shadow="hover" header="设备状态统计">
           <el-row class="home-monitor">
             <el-col :span="12">
@@ -63,6 +74,30 @@
           </el-row>
         </el-card>
       </el-col>
+      <el-col :xs="24" :sm="16" :md="16" :lg="12" :xl="12">
+        <el-card shadow="hover" header="设备类型统计">
+          <div class="home-monitor">
+            <div class="flex-warp">
+              <div class="flex-warp-item">
+                <div class="flex-warp-item-box" style="font-size: 16px">
+                  <i class="iconfont icon-yangan" :style="{ color: '#d37495' }"></i>
+                  <span class="pl5" >标准设备</span>
+                  <div class="mt10"><strong>0</strong> 个</div>
+                </div>
+              </div>
+            </div>
+            <div class="flex-warp">
+              <div class="flex-warp-item">
+                <div class="flex-warp-item-box" style="font-size: 16px">
+                  <i class="iconfont icon-yangan" :style="{ color: '#d37495' }"></i>
+                  <span class="pl5" >容器设备</span>
+                  <div class="mt10"><strong>0</strong> 个</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -77,17 +112,18 @@ import Cookies from "js-cookie";
 const {proxy} = getCurrentInstance() as any;
 const state = reactive({
   devicePanel: {
-    deviceInfo: {},
-    alarmInfo: {},
-    deviceLinkStatusInfo: [],
-    deviceCountType: [],
+    DeviceInfo: {},
+    AlarmInfo: {},
+    DeviceLinkStatusInfo: [],
+    DeviceCountType: [],
   },
   deviceAlarmPanel: [],
-  colors: ['#3DD2B4', '#8595F4', '#E88662'],
+  colors: ['#3DD2B4', '#8595F4', '#E88662','#3DA008'],
   onLineCount: 0,
   offLineCount: 0,
   inactiveCount: 0,
   myCharts: [],
+  MachineInfo:{},
 });
 
 
@@ -102,28 +138,12 @@ const getPanelData = async () => {
     state.deviceAlarmPanel = res.data
     initDeviceAlarmCount()
   }
+  res = await axios.get("/api/devices/get-machine-info")
+  if (res.status === 200) {
+    state.MachineInfo = res.data
+  }
 }
 
-// 获取用户信息 pinia
-const getUserInfos = computed(async () => {
-  let data= await axios.get("/api/dashboard/user/info")
-  if(data.status===200)
-  {
-    return data.data
-  }
-  return {
-    username: Cookies.get('username'),
-    time: 0,
-
-    userId: 0,
-    roleId: 0,
-    organizationId: 0,
-    postId: 0,
-
-    lastLoginTime: 0,
-    lastLoginIp: "127.0.0.1",
-  };
-});
 // 当前时间提示语
 const currentTime = computed(() => {
   return formatAxis(new Date());
@@ -180,16 +200,16 @@ const initDeviceCount = () => {
   let data = []
   let statusName = '未知'
 
-  state.devicePanel.deviceLinkStatusInfo.forEach((item, index) => { //ok
-    if (item["linkStatus"] === 'online') {
+  state.devicePanel.DeviceLinkStatusInfo.forEach((item, index) => { //ok
+    if (item["LinkStatus"] === 'online') {
       statusName = "在线设备"
-      state.onLineCount = item["deviceTotal"] || 0
+      state.onLineCount = item["DeviceTotal"] || 0
     }
-    if (item["linkStatus"] === 'offline') {
+    if (item["LinkStatus"] === 'offline') {
       statusName = "离线设备"
-      state.offLineCount = item["deviceTotal"] || 0
+      state.offLineCount = item["DeviceTotal"] || 0
     }
-    data.push({value: item["deviceTotal"], name: statusName, itemStyle: {color: state.colors[index]}})
+    data.push({value: item["DeviceTotal"], name: statusName, itemStyle: {color: state.colors[index]}})
   })
 
   const option = {
@@ -336,15 +356,13 @@ watch(
       }
     }
   }
-
   .home-monitor {
     height: 240px;
-
+    width: auto;
     .flex-warp-item {
       width: 50%;
       height: 100px;
       display: flex;
-
       .flex-warp-item-box {
         margin: auto;
         height: auto;
@@ -353,7 +371,6 @@ watch(
       }
     }
   }
-
   .home-warning-card {
     height: 292px;
 
