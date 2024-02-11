@@ -8,10 +8,11 @@ import (
 	"net/http"
 )
 
-// getDevicesName
+// GetDevicesName
 // ttp://127.0.0.1:8088/api/devices/:devices-token/getdevices-name?token=xxx
-func getDevicesName(context *gin.Context) {
+func GetDevicesName(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：GetDevicesName", "GET", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")

@@ -9,10 +9,11 @@ import (
 	"strconv"
 )
 
-// getDevices
+// GetDevices
 // http://127.0.0.1:8088/api/devices/get-devices?token=xxx
-func getDevices(context *gin.Context) {
+func GetDevices(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：GetDevices", "GET|POST", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")
@@ -46,10 +47,11 @@ func getDevices(context *gin.Context) {
 	}
 }
 
-// getAllDevices 获取所有设备信息（包括不在线的） (不指定groupID则获取全部)
+// GetAllDevices 获取所有设备信息（包括不在线的） (不指定groupID则获取全部)
 // http://127.0.0.1:8088/api/devices/get-all-devices?token=xxx[&groupID=xxx]
-func getAllDevices(context *gin.Context) {
+func GetAllDevices(context *gin.Context) {
 	logrus.Info("WebAPI: Request getAllDevices: ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：GetAllDevices", "GET|POST", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	gID, _ := strconv.Atoi(context.DefaultQuery("groupID", "-1"))
 	t1 := context.PostForm("groupID")
@@ -91,15 +93,18 @@ func getAllDevices(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path, " success.")
 }
 
-// getAllDevicesV2 获取所有设备信息（包括不在线的） (不指定groupID则获取全部)
+// GetAllDevicesV2 获取所有设备信息（包括不在线的） (不指定groupID则获取全部)
 // http://127.0.0.1:8088/api/v2/devices/get-all-devices?token=xxx[&groupID=xxx]
-func getAllDevicesV2(context *gin.Context) {
+func GetAllDevicesV2(context *gin.Context) {
 	logrus.Info("WebAPI: Request getAllDevices: ", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	gID, _ := strconv.Atoi(context.DefaultQuery("groupID", "-1"))
 	t1 := context.PostForm("groupID")
 	if t1 != "" {
 		gID, _ = strconv.Atoi(t1)
+		config.AddOperLogs("WebAPI访问：GetAllDevicesV2", "POST", context.Request.URL.Path)
+	} else {
+		config.AddOperLogs("WebAPI访问：GetAllDevicesV2", "GET", context.Request.URL.Path)
 	}
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")

@@ -101,6 +101,7 @@ func DBOpen() {
 			if dt1.Token == "" {
 				continue
 			}
+			debugTools.PrintLogs("DBOpen():读取到的设备ID："+strconv.Itoa(dt1.DevicesID), " 设备Token：", dt1.Token, " 设备名称：", dt1.DevicesName)
 			dt.DevicesListID = append(dt.DevicesListID, dt1)
 			var dt3 global.DevicesInfo
 			dt3.Online = false

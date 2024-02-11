@@ -6,7 +6,9 @@ import (
 	"net/http"
 )
 
-func tokenAuth(context *gin.Context) {
+var tokenApis []*config.TokenApi //know
+
+func TokenAuth(context *gin.Context) {
 	username := context.DefaultQuery("username", "")
 	passwd := context.DefaultQuery("passwd", "")
 	var tokenApi *config.TokenApi

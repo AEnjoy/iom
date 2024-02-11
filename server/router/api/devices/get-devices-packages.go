@@ -9,11 +9,11 @@ import (
 	"strconv"
 )
 
-// getPackages
+// GetPackages
 // http://127.0.0.1:8088/api/devices/:id/getpackages?token=xxx
 // or
 // http://127.0.0.1:8088/api/devices/:ClientID/getpackages?token=xxx
-func getPackages(context *gin.Context) {
+func GetPackages(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -27,7 +27,9 @@ func getPackages(context *gin.Context) {
 	if e != nil {
 		//clinentToken
 		clientID = id
+		config.AddOperLogs("WebAPI访问：GetPackages", "GET", context.Request.URL.Path)
 	} else {
+		config.AddOperLogs("WebAPI访问：GetPackages", "POST", context.Request.URL.Path)
 		clientID = config.DeviceIDGetDeviceToken(idI)
 		if clientID == "" {
 			context.String(http.StatusBadRequest, "Device is invalid")

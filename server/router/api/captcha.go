@@ -32,7 +32,7 @@ func stringConfig() *base64Captcha.DriverString {
 	return stringType
 }
 
-func createCode(ctx *gin.Context) {
+func CreateCode(ctx *gin.Context) {
 	driver := stringConfig()
 	// 生成验证码
 	c := base64Captcha.NewCaptcha(driver, result)
@@ -48,7 +48,7 @@ func verifyCaptcha(id, answer string) bool {
 	return result.Verify(id, answer, true)
 }
 
-func verify(c *gin.Context) {
+func Verify(c *gin.Context) {
 	ids := c.DefaultQuery("captcha_id", "")
 	if ids == "" {
 		ids = id

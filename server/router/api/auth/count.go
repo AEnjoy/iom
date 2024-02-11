@@ -9,7 +9,7 @@ type loginInfo struct {
 
 var loginInfoMap = make(map[string]loginInfo) //ip:struct
 
-func timeToClen() {
+func TimeToClen() {
 	for {
 		for s, v := range loginInfoMap {
 			nowT := time.Now().Unix()

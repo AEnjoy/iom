@@ -41,6 +41,8 @@ func Init() {
 	go global.TimeToCheckTokenIsValid()
 }
 func Main() {
+	go config.MapInit()
+	go global.MapInit()
 	var shell = true
 	var server = true
 	var admin = true
@@ -58,8 +60,6 @@ func Main() {
 	}
 
 	if admin {
-		go config.MapInit()
-		go global.MapInit()
 		global.TaskListInit()
 		config.DBOpen()
 		rows, _ := config.Db.Query("select * from IOMSystem")

@@ -14,11 +14,11 @@ import (
 	"strconv"
 )
 
-// groupAdd
+// GroupAdd
 // Post
 //
 //	http://127.0.0.1:8088/api/group/add?token=xxx&id=xxx&name=xxx
-func groupAdd(context *gin.Context) {
+func GroupAdd(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -53,9 +53,9 @@ func groupAdd(context *gin.Context) {
 	logrus.Infoln("WebAPI: group add id:", gid, ", name:", name, " successful.")
 }
 
-//		groupDelete
+//		GroupDelete
 //	 http://127.0.0.1:8088/api/group/delete?token=xxx&id=xxx
-func groupDelete(context *gin.Context) {
+func GroupDelete(context *gin.Context) {
 	logrus.Info("WebAPI: Request Delete:", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -81,7 +81,7 @@ func groupDelete(context *gin.Context) {
 
 //	       groupNameGetGroupID Get
 //		   	http://127.0.0.1:8088/api/group/search/name-get-id?token=xxx&name=xxx
-func groupNameGetGroupIDGetMethod(context *gin.Context) {
+func GroupNameGetGroupIDGetMethod(context *gin.Context) {
 	logrus.Info("WebAPI: Request GetGroupID:", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -102,7 +102,7 @@ func groupNameGetGroupIDGetMethod(context *gin.Context) {
 
 //	 groupNameGetGroupID Post
 //		curl http://localhost:8088/api/group/search/name-get-id  -X POST -d 'name=xxx'
-func groupNameGetGroupIDPostMethod(context *gin.Context) {
+func GroupNameGetGroupIDPostMethod(context *gin.Context) {
 	logrus.Info("WebAPI: Request GetGroupID:", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -123,7 +123,7 @@ func groupNameGetGroupIDPostMethod(context *gin.Context) {
 
 //	     groupIDGetGroupName Get/Post
 //			http://localhost:8088/api/group/id/is-valid?id=xxx
-func isGroupIDValidGetMethod(context *gin.Context) {
+func IsGroupIDValidGetMethod(context *gin.Context) {
 	logrus.Info("WebAPI: Request isGroupIDValidGetMethod:", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -135,7 +135,7 @@ func isGroupIDValidGetMethod(context *gin.Context) {
 	context.String(http.StatusOK, strconv.FormatBool(config.IsGroupIDValid(gId)))
 	logrus.Infoln("WebAPI: Request isGroupIDValidPostMethod:", context.Request.URL.Path, " done. Value is ", strconv.FormatBool(config.IsGroupIDValid(gId)))
 }
-func isGroupIDValidPostMethod(context *gin.Context) {
+func IsGroupIDValidPostMethod(context *gin.Context) {
 	logrus.Info("WebAPI: Request isGroupIDValidGetMethod:", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -148,9 +148,9 @@ func isGroupIDValidPostMethod(context *gin.Context) {
 	logrus.Infoln("WebAPI: Request isGroupIDValidPostMethod:", context.Request.URL.Path, " done. Value is ", strconv.FormatBool(config.IsGroupIDValid(gId)))
 }
 
-// getGroupList
+// GetGroupList
 // curl http://localhost:8088/api/group/get-list
-func getGroupList(context *gin.Context) {
+func GetGroupList(context *gin.Context) {
 	logrus.Info("WebAPI: Request getGroupList:", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {

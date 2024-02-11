@@ -10,7 +10,7 @@ import (
 )
 
 // Get
-func signInAuth(context *gin.Context) {
+func SignInAuth(context *gin.Context) {
 	if global.IsCookieAuthValid(context) { //防止反复登录授权
 		v, _ := context.Cookie("IOMAuth")
 		context.String(http.StatusOK, v)
@@ -45,6 +45,7 @@ func signInAuth(context *gin.Context) {
 	if ok {
 		context.SetCookie("IOMAuth", t, 3600*24, "", context.Request.Host, false, false)
 		context.SetCookie("username", un, 3600*24, "", context.Request.Host, false, false)
+		config.AddLoginLog(un, context.Request.RemoteAddr, context.Request.Host, context.Request.UserAgent(), "登录成功", time.Now())
 		//context.Redirect(302, "/dashboard")
 		context.String(http.StatusOK, t)
 		return
@@ -55,7 +56,7 @@ func signInAuth(context *gin.Context) {
 
 // Post
 // curl http://localhost:8088/api/auth/signin  -X POST -d 'username=admin&password=passwords'
-func signInAuthP(context *gin.Context) {
+func SignInAuthP(context *gin.Context) {
 	if global.IsCookieAuthValid(context) { //防止反复登录授权
 		//context.String(http.StatusOK, "ok")
 		v, _ := context.Cookie("IOMAuth")
@@ -91,6 +92,7 @@ func signInAuthP(context *gin.Context) {
 	if ok {
 		context.SetCookie("IOMAuth", t, 3600*24, "", context.Request.Host, false, false)
 		context.SetCookie("username", un, 3600*24, "", context.Request.Host, false, false)
+		config.AddLoginLog(un, context.Request.RemoteAddr, context.Request.Host, context.Request.UserAgent(), "登录成功", time.Now())
 		//context.Redirect(302, "/dashboard")
 		context.String(http.StatusOK, t)
 		return

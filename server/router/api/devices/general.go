@@ -11,12 +11,13 @@ import (
 	"time"
 )
 
-// deviceInfo  http://127.0.0.1:8088/api/devices/:id/info?token=xxx
+// DeviceInfo  http://127.0.0.1:8088/api/devices/:id/info?token=xxx
 //
 //	or	 http://127.0.0.1:8088/api/devices/:ClientID/info?token=xxx
 //	json
-func deviceInfo(context *gin.Context) {
+func DeviceInfo(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：DeviceInfo", "GET", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")
@@ -24,27 +25,28 @@ func deviceInfo(context *gin.Context) {
 		return
 	}
 	id := context.Param("id") //int
-	var clinentID string
+	var clientID string
 	idI, e := strconv.Atoi(id)
 	if e != nil {
 		//clinentToken
-		clinentID = id
+		clientID = id
 	} else {
-		clinentID = config.DeviceIDGetDeviceToken(idI)
-		if clinentID == "" {
+		clientID = config.DeviceIDGetDeviceToken(idI)
+		if clientID == "" {
 			context.String(http.StatusBadRequest, "DeviceID is invalid")
 			return
 		}
 	}
-	//v, e := json.Marshal(global.DevicesInfos[clinentID])
-	context.JSON(http.StatusOK, global.DevicesInfos[clinentID])
+	//v, e := json.Marshal(global.DevicesInfos[clientID])
+	context.JSON(http.StatusOK, global.DevicesInfos[clientID])
 }
 
-// add http://127.0.0.1:8088/api/devices/add?token=xxx&
+// Add http://127.0.0.1:8088/api/devices/add?token=xxx&
 //
 //	deviceId=xxx&devicesWeight=xxx&devicesToken=xxx&deviceName=xxx&deviceFlag=xxx&groupId=xxx
-func add(context *gin.Context) {
+func Add(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：Add", "POST", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")
@@ -82,10 +84,11 @@ func add(context *gin.Context) {
 	context.String(http.StatusOK, "ok")
 }
 
-// deleteDevice
+// DeleteDevice
 // http://127.0.0.1:8088/api/devices/delete?token=xxx&id=xxx&groupid=xxx
-func deleteDevice(context *gin.Context) {
+func DeleteDevice(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：DeleteDevice", "DELETE", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")

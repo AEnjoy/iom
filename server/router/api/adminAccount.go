@@ -8,8 +8,9 @@ import (
 	"net/http"
 )
 
-func passwordChange(context *gin.Context) {
+func PasswordChange(context *gin.Context) {
 	logrus.Info("WebAPI: Request ", context.Request.URL.Path)
+	config.AddOperLogs("WebAPI访问：CreatToken", "POST", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
 		context.String(http.StatusUnauthorized, "token is invalid")

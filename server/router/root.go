@@ -2,12 +2,11 @@ package router
 
 import (
 	"IOM/server/global"
-	otherApis2 "IOM/server/router/api/otherApis"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func main() {
+func static() {
 	global.Router.Static("/static", "./res")
 	global.Router.Static("/assets", "./res")
 	global.Router.Static("/index.html", "./index.html")
@@ -19,11 +18,5 @@ func main() {
 		c.HTML(http.StatusOK, "404.html", gin.H{
 			"title": "404",
 		})
-	})
-}
-func otherApis() {
-	global.Router.GET("/api/creat-token", otherApis2.CreatToken)
-	global.Router.GET("/api/version", func(context *gin.Context) {
-		context.String(200, global.Version)
 	})
 }

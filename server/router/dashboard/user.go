@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-// getUserInfo 获取用户信息
+// GetUserInfo 获取用户信息
 // http://127.0.0.1:8088/api/dashboard/user/info
-func getUserInfo(context *gin.Context) {
+func GetUserInfo(context *gin.Context) {
 	logrus.Info("WebAPI: Request getUserInfo", context.Request.URL.Path)
 	token := context.DefaultQuery("token", "")
 	if !global.IsValidToken(token) && !global.IsCookieAuthValid(context) {
@@ -29,7 +29,7 @@ func getUserInfo(context *gin.Context) {
 		"roleId":         0,
 		"organizationId": 0,
 		"postId":         0,
-		"lastLoginTime":  config.StartTime.Format("2006-06-12 11:11:00"),
+		"lastLoginTime":  config.StartTime.Format("2006-01-02 15:04:05"),
 		"lastLoginIp":    context.ClientIP()})
 
 }
